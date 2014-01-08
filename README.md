@@ -33,9 +33,9 @@ watch({view: viewRoot + '/view.html'}, function(views){
 })
 
 function getModule(views, relativeTo){
-  var results = Object.keys(views).forEach(function(key){
+  var results = Object.keys(views).map(function(key){
     return key + ': View(' + views[key].stringify(relativeTo) + ')' 
   })
-  return 'var View = require("rincewind"); module.exports = {' + results.join(', ') '}'
+  return 'var View = require("rincewind"); module.exports = {' + results.join(', ') + '}'
 }
 ```
