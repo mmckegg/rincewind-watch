@@ -5,6 +5,20 @@ Watch [rincewind](https://github.com/mmckegg/rincewind) views and trigger callba
 
 [![NPM](https://nodei.co/npm/rincewind-watch.png?compact=true)](https://nodei.co/npm/rincewind-watch/)
 
+## API
+
+```js
+var watch = require('rincewind-watch')
+```
+
+### watch(viewPaths, [opts], cb)
+
+Pass in a single path string, an array of viewPaths or an object with named paths (e.g `{view: __dirname + '/view.html'}).
+
+If opts.watch is false, don't watch for changes, only trigger callback once.
+
+Returns a function which when called, stops watching and cleans up.
+
 ## Example
 
 Automatically compile views to javascript when they are changed

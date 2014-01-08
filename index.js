@@ -6,7 +6,15 @@ var getDirName = require('path').dirname
 module.exports = watch
 
 
-function watch(viewPaths, cb){
+function watch(viewPaths, opts, cb){
+  // opts: { delay: 300, watch: true }
+
+  opts = opts || {}
+  if (typeof opts === 'function'){
+    cb = opts
+    opts = {}
+  }
+
 
   if (Array.isArray(viewPaths)){
     var array = viewPaths
@@ -40,7 +48,7 @@ function watch(viewPaths, cb){
     if (!pending) setTimeout(function () {
       pending = false
       update()
-    }, 300)
+    }, opts.delay||300)
     
     pending = true
   }
@@ -60,15 +68,17 @@ function watch(viewPaths, cb){
       addWatchPaths(watchPaths, view.getCompiledView(), getDirName(viewPath))
     })
 
-    diff(watchPaths, oldPaths).forEach(function(newPath){
-      var w = watches[newPath] = chokidar.watch(newPath, {persistent: true, ignoreInitial: true})
-      w.on('change', queueUpdate)
-    })
+    if (opts.watch !== false){
+      diff(watchPaths, oldPaths).forEach(function(newPath){
+        var w = watches[newPath] = chokidar.watch(newPath, {persistent: true, ignoreInitial: true})
+        w.on('change', queueUpdate)
+      })
 
-    diff(oldPaths, watchPaths).forEach(function(oldPath){
-      watches[oldPath].close()
-      ;delete watches[oldPath]
-    })
+      diff(oldPaths, watchPaths).forEach(function(oldPath){
+        watches[oldPath].close()
+        ;delete watches[oldPath]
+      })
+    }
 
     cb&&cb(views)
   }
