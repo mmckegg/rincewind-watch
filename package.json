@@ -1,0 +1,33 @@
+{
+  "name": "rincewind-watch",
+  "version": "0.0.0",
+  "description": "Watch rincewind views and trigger callbacks on change",
+  "main": "index.js",
+  "scripts": {
+    "test": "tape test/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mmckegg/rincewind-watch.git"
+  },
+  "keywords": [
+    "rincewind",
+    "watch",
+    "template",
+    "reload"
+  ],
+  "author": "Matt McKegg",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mmckegg/rincewind-watch/issues"
+  },
+  "homepage": "https://github.com/mmckegg/rincewind-watch",
+  "devDependencies": {
+    "tape": "~2.3.2",
+    "rimraf": "~2.2.5"
+  },
+  "dependencies": {
+    "chokidar": "~0.8.1",
+    "rincewind": ">=1.1.4 <2.0.0"
+  }
+}
