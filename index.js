@@ -31,6 +31,7 @@ function watch(viewPaths, opts, cb){
   var watches = {}
   var views = {}
   var pending = false
+  var pendingPaths = []
 
   process.nextTick(function(){
     update()
@@ -45,9 +46,11 @@ function watch(viewPaths, opts, cb){
   }
 
   function queueUpdate(path){
+    pendingPaths.push(path)
     if (!pending) setTimeout(function () {
       pending = false
       update()
+      pendingPaths = []
     }, opts.delay||300)
     
     pending = true
@@ -80,7 +83,7 @@ function watch(viewPaths, opts, cb){
       })
     }
 
-    cb&&cb(views)
+    cb&&cb(views, pendingPaths)
   }
 
 }
@@ -96,6 +99,8 @@ function addWatchPaths(watchPaths, view, root){
         addWatchPaths(watchPaths, view.views[key], getDirName(path))
       }
     })
+  } else if (view.require){
+    watchPaths.push(view.require)
   }
 }
 

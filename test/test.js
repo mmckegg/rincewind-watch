@@ -6,7 +6,7 @@ var watch = require('../')
 
 test(function(t){
 
-  t.plan(6)
+  t.plan(7)
 
   rimraf(__dirname + '/tmp', function(){
 
@@ -15,6 +15,8 @@ test(function(t){
     fs.writeFileSync(__dirname + '/tmp/view.html', "<? require './sub.html' as sub ?> View content")
     fs.writeFileSync(__dirname + '/tmp/sub.html', "Sub content")
     fs.writeFileSync(__dirname + '/tmp/another.html', "Another")
+    fs.writeFileSync(__dirname + '/tmp/script.js', "module.exports = function(){ return 'test' }")
+
 
     var stop = watch({view: __dirname + '/tmp/view.html'}, function(data){
       var view = data.view.getCompiledView()
@@ -41,12 +43,20 @@ test(function(t){
     function writeSecondChange(){
       var path = __dirname + '/tmp/view.html'
       handle = function(view){
-        t.not('requires' in view )
-        t.deepEqual(Object.keys(view.views), [])
+        t.deepEqual(view.requires, {"script":"./script.js"})
+        t.deepEqual(Object.keys(view.views), ['script'])
+        setTimeout(writeThirdChange, 50)
+      }
+      fs.writeFileSync(path, "<? require './script.js' as script ?> View content")
+    }
+
+    function writeThirdChange(){
+      var path = __dirname + '/tmp/script.js'
+      handle = function(view){
+        t.ok(true, 'change notified')
         finish()
       }
-      fs.writeFileSync(path, "View content")
-
+      fs.writeFileSync(path, "<? require './script.js' as script ?> View content")
     }
 
     function finish(){
