@@ -1,6 +1,6 @@
 {
   "name": "rincewind-watch",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Watch rincewind views and trigger callbacks on change",
   "main": "index.js",
   "scripts": {
