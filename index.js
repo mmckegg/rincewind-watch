@@ -46,7 +46,7 @@ function watch(viewPaths, opts, cb){
   }
 
   function queueUpdate(path){
-    pendingPaths.push(path)
+
     if (!pending) setTimeout(function () {
       pending = false
       update()
@@ -89,10 +89,20 @@ function watch(viewPaths, opts, cb){
 }
 
 function addWatchPaths(watchPaths, view, root){
-  if (view.requires){
+
+  if (view.resources){
+    Object.keys(view.resources).forEach(function(key){
+      var resource = view.resources[key]
+      if (resource instanceof Object){
+        if (!~watchPaths.indexOf(resource.path)){
+          watchPaths.push(resource.path)
+        }
+      }
+    })
+  } else if (view.requires){
     Object.keys(view.requires).forEach(function(key){
       var path = join(root, view.requires[key])
-      if (!~watchPaths.indexOf(key)){
+      if (!~watchPaths.indexOf(path)){
         watchPaths.push(path)
       }
       if (view.views && view.views[key]){
